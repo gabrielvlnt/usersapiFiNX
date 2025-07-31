@@ -1,0 +1,30 @@
+services: 
+  web:
+    build: .
+    container_name: fastapi_container
+    ports:
+    - "8080:8080"
+    volumes: 
+    - ./:/app
+    environment:
+     - SECRET_KEY=KLA&7732840@çÇkajshd55bkb****66askdjn@ç
+     - ALGORITHM=HS256
+     - EXPIRATION_MINUTES=30
+     - DATABASE_URL=postgresql+psycopg2://gabriel:gabriel@db/fastapi
+    depends_on:
+    - db
+  
+  db: 
+    image: postgres:13
+    container_name: fastapi-db
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_DB: fastapi
+      POSTGRES_USER: gabriel
+      POSTGRES_PASSWORD: gabriel
+    volumes:
+    - db_data:/var/lib/postgresqldb/data
+  
+volumes:
+  db_data:
