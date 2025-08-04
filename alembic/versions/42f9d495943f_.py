@@ -37,7 +37,6 @@ def downgrade() -> None:
     sa.Column('hashed_password', sa.VARCHAR(), autoincrement=False, nullable=False),
     sa.Column('is_admin', sa.BOOLEAN(), autoincrement=False, nullable=True),
     sa.PrimaryKeyConstraint('id', name=op.f('Users_pkey')),
-    sa.UniqueConstraint('email', name=op.f('Users_email_key'), postgresql_include=[], postgresql_nulls_not_distinct=False)
-    )
+    sa.UniqueConstraint('email', name=op.f('Users_email_key'))),
     op.create_index(op.f('ix_Users_id'), 'Users', ['id'], unique=False)
     # ### end Alembic commands ###

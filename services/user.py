@@ -33,11 +33,10 @@ def update_user(user_id: int, user_data: UserCreate, db: Session) -> UserOut:
         user_to_update = db.query(Users).filter(Users.id == user_id).first()
         if user_to_update is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Usuário não encontrado')
-            return
         verify_password_to_update = verify_password(user_data.password, user_to_update.hashed_password)
+        
         if verify_password_to_update is False:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Senha incorreta')
-            return
         hashed_password = hash_password(user_data.password) 
         if user_to_update:
             if user_data.name is not None:
