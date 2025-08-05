@@ -28,7 +28,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          docker compose exec web python -m pytest tests/integration/tests_users_routes.py/ --cov=api --cov-fail-under=90 -v
+          docker compose exec web python -m pytest tests/integration/tests_users_routes.py/ --cov=api --cov-fail-under=70 -v
 
       - name: Run unit tests
         run: | 

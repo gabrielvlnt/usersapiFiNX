@@ -2,9 +2,11 @@ from fastapi import Depends
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
+from dotenv import load_dotenv
 from typing import Annotated
 import os
 
+load_dotenv('.env')
 
 secret_key = os.getenv('SECRET_KEY')
 algorithm_local = os.getenv('ALGORITHM')

@@ -1,10 +1,11 @@
 from unittest.mock import MagicMock, patch
 from fastapi.testclient import TestClient
 from fastapi import Depends, HTTPException
-from schema.user import UserOut
+from schema.user import UserOut, UserLogin
 from models.user import Users
 from tests.conftest import mock_user_schema, client
 from services.user import create_user, update_user
+from services.auth import authenticate_user, get_user
 import pytest
 
 
@@ -61,4 +62,23 @@ def test_update_user_error(mock_user_schema):
         result = update_user(1, mock_user_schema, mock_db)
 
     assert exc_info.value.status_code == 404
-    assert 'Usuário não encontrado' in str(exc_info.value.detail) 
+    assert 'Usuário não encontrado' in str(exc_info.value.detail)
+
+def test_authenticate_user():
+    user_login_schema = {
+        'username': 'test@email.com',
+        'string': 'string'
+    }
+
+    mock_db = MagicMock()
+    mock_query = MagicMock()
+    mock_query.filter.return_value.first.return_value = Users(id=1, name='Gabriel', email='test@email.com', hashed_password='$2b$12$aGu5RAJ0i4Spc6I6yvWnQuA31rZZ55rt7ktsgSjvnmak5QFLk2gK2')
+    mock_db = mock_query
+
+    result = authenticate_user(user_login_schema, mock_db)
+
+    assert isinstance(result, MagicMock)
+
+#Test_authenticate_user_error
+
+

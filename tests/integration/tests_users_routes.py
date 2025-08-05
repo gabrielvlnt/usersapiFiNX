@@ -56,3 +56,20 @@ def test_delete_user(client, db):
     response = client.delete(f'/user/delete_profile/{fake_user.id}')
 
     assert response.status_code == 204
+
+def test_login_token(client, db):
+    fake_user = Users(name='Gabriel', email='gabriel@email.com', hashed_password='$2b$12$QIDjYGoko7t7Q2Ia9tI.8uk.5iLK5WiICcnzPKRdE/Oaji7mR2UEi')
+    db.add(fake_user)
+    db.commit()
+
+    payload = {
+        'username': 'gabriel@email.com',
+        'password': 'string'
+    }
+
+    response = client.post('/user/token', data=payload)
+
+    assert response.status_code == 202
+    data = response.json()
+    assert 'access_token' in data
+    print(data)

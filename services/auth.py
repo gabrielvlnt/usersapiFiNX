@@ -47,4 +47,5 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session)
 
 def authenticate_user(user: UserLogin, db: Session):
     user_exists = get_user(user, db)
+
     return user_exists
