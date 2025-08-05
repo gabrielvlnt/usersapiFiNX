@@ -11,8 +11,11 @@ services:
      - ALGORITHM=HS256
      - EXPIRATION_MINUTES=30
      - DATABASE_URL=postgresql+psycopg2://gabriel:gabriel@db/fastapi
+    env_file:
+     - .env.test
     depends_on:
     - db
+    - test-db
   
   db: 
     image: postgres:13
@@ -26,5 +29,20 @@ services:
     volumes:
     - db_data:/var/lib/postgresqldb/data
   
+  test-db:
+    image: postgres:13
+    container_name: testdb
+    ports:
+    - "5434:5434"
+    environment:
+      POSTGRES_PASSWORD: gabriel
+      POSTGRES_USER: gabriel
+      POSTGRES_DB: testdb
+    volumes:
+    - testdb_data:/var/lib/postgresqltestdb/data
+    depends_on:
+    - db
+
 volumes:
   db_data:
+  testdb_data:
