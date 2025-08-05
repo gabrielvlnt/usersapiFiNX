@@ -7,6 +7,13 @@ from schema.user import UserOut, UserLogin
 from models.user import Users
 from core.security import decode_access_token
 from .utils import verify_password
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
@@ -15,6 +22,7 @@ def get_user(email: UserLogin, db: Session) -> UserOut:
     user = db.query(Users).filter(Users.email == email).first()
     if not user:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='User not found')
+        logger.error(f'User was not found on get_user function')
     return user
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session):
@@ -34,6 +42,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session)
     user = get_user(user, db)
     if user is None:
         raise credential_exception
+        logger.error(f'get_current_user returned user is None')
     return user
 
 def authenticate_user(user: UserLogin, db: Session):

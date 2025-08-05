@@ -4,6 +4,14 @@ from models.user import Users
 from schema.user import UserCreate, UserOut
 from fastapi import HTTPException, status
 from .utils import hash_password, verify_password
+import logging
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 def create_user(user: UserCreate, db: Session) -> UserOut:
     user_exists = db.query(Users).filter(Users.email == user.email).first()
@@ -16,7 +24,8 @@ def create_user(user: UserCreate, db: Session) -> UserOut:
             if username_exist:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Nome já cadastrado')
         except Exception as e:
-            print(e)   
+            print(e)
+            logger.error(f'Error on create_user function {e}')
     hashed_password = hash_password(user.password)
     user_create = Users(
         name=user.name,
@@ -50,11 +59,12 @@ def update_user(user_id: int, user_data: UserCreate, db: Session) -> UserOut:
             db.commit()
             db.refresh(user_to_update)
             return user_to_update
-    except HTTPException:
+    except HTTPException as e:
         raise
+        logger.error(f'Error on update_user function HTTPException: {e}')
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Algo deu errado... {e}")
-
+        logger.error(f'Error on update_user function Exception: {e}')
 def delete_user(user_id: int, db: Session) -> UserOut:
     user_delete = db.query(Users).filter(Users.id == user_id).first()
 
@@ -63,3 +73,4 @@ def delete_user(user_id: int, db: Session) -> UserOut:
         db.commit()
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Usuário não encontrado')   
+        logger.error(f'Error on delete_user function {e}')
