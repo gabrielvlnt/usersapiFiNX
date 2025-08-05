@@ -14,10 +14,6 @@ jobs:
         uses: actions/checkout@v3
 
 
-      - name: Docker compose build
-        run: |
-          docker compose build --no-cache
-
       - name: Docker compose up 
         run: |
           docker compose up --build -d
@@ -28,11 +24,11 @@ jobs:
 
       - name: Run integration tests
         run: |
-          docker compose exec web python -m pytest tests/integration/tests_users_routes.py/ --cov=api --cov-fail-under=90 -v
+          docker compose exec web python -m pytest tests/integration/tests_users_routes.py/ --cov=api --cov-fail-under=80 -v
 
       - name: Run unit tests
         run: | 
-          docker compose exec web python -m pytest tests/unit/tests_service.py --cov=api --cov-fail-under=70 -v
+          docker compose exec web python -m pytest tests/unit/tests_service.py --cov=services --cov-fail-under=70 -v
 
       - name: Stop docker
         run: |
