@@ -20,7 +20,11 @@ jobs:
 
       - name: Docker compose up 
         run: |
-          docker compose up --build
+          docker compose up --build -d
+
+      - name: Run alembic migration on docker 
+        run: |
+          docker compose exec web alembic upgrade head
 
       - name: Run integration tests
         run: |
