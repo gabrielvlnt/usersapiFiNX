@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jwt.exceptions import InvalidTokenError
 from schema.user import UserOut, UserLogin
+from schema.token import TokenData
 from models.user import Users
 from core.security import decode_access_token
 from .utils import verify_password
